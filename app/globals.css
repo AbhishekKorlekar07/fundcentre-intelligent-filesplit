@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground: 17 24 39;
+  --background: 249 250 251;
+}
+
+body {
+  color: rgb(var(--foreground));
+  background: rgb(var(--background));
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dropzone {
+  border: 2px dashed rgb(203 213 225);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 150ms ease;
+  background: white;
+}
+.dropzone:hover,
+.dropzone.active {
+  border-color: rgb(59 91 219);
+  background: rgb(240 244 255);
+}

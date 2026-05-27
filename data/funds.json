@@ -1,0 +1,200 @@
+[
+    {
+      "id": "b5442dee-5624-444a-9c5c-bb9c8365a17c",
+      "externalId": "KC003",
+      "createdBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "updatedBy": "029c0e70-1240-48d4-b2c0-39ff34cc34a1",
+      "createdAt": "2024-10-01T04:11:03.440Z",
+      "updatedAt": "2026-03-24T16:13:50.363Z",
+      "currencyCode": "USD",
+      "inceptionPeriod": {
+        "year": 2025,
+        "index": 4
+      },
+      "dataStartPeriod": {
+        "year": 2025,
+        "index": 4
+      },
+      "interval": "QUARTERLY",
+      "gp": "8e6c3269-ce8e-4193-9bfd-7cb52b92c1af",
+      "type": "PRIVATE_EQUITY_FUND",
+      "strategy": "MULTI_STRATEGY",
+      "investmentDataSource": "TRINITY",
+      "isLive": true,
+      "isLocked": false,
+      "name": {
+        "legal": "Keystone Emerging Fund I",
+        "marketing": "Keystone Emerging Fund I",
+        "short": "Keystone Emerging Fund I"
+      },
+      "externalSystemAssociations": []
+    },
+    {
+      "id": "021cb312-ebbf-4aae-a7c9-942d93966d68",
+      "externalId": "KC001",
+      "createdBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "updatedBy": "029c0e70-1240-48d4-b2c0-39ff34cc34a1",
+      "createdAt": "2024-10-01T04:11:03.440Z",
+      "updatedAt": "2026-03-24T04:05:42.874Z",
+      "currencyCode": "USD",
+      "inceptionPeriod": {
+        "year": 2025,
+        "index": 3
+      },
+      "dataStartPeriod": {
+        "year": 2025,
+        "index": 3
+      },
+      "interval": "QUARTERLY",
+      "gp": "8e6c3269-ce8e-4193-9bfd-7cb52b92c1af",
+      "type": "SMALL_BUSINESS_LENDING",
+      "strategy": "SMALL_BUSINESS_LENDING",
+      "investmentDataSource": "TRINITY",
+      "isLive": true,
+      "isLocked": false,
+      "name": {
+        "legal": "Keystone Capital Fund I",
+        "marketing": "Keystone Capital Fund I",
+        "short": "Keystone Capital Fund I"
+      },
+      "externalSystemAssociations": []
+    },
+    {
+      "id": "8ed85b61-2540-4db7-9f13-6ba80acd7bb7",
+      "externalId": "KC005",
+      "createdBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "updatedBy": "029c0e70-1240-48d4-b2c0-39ff34cc34a1",
+      "createdAt": "2024-10-01T04:11:03.440Z",
+      "updatedAt": "2026-03-24T16:21:45.157Z",
+      "currencyCode": "USD",
+      "inceptionPeriod": {
+        "year": 2025,
+        "index": 4
+      },
+      "dataStartPeriod": {
+        "year": 2025,
+        "index": 4
+      },
+      "interval": "QUARTERLY",
+      "gp": "8e6c3269-ce8e-4193-9bfd-7cb52b92c1af",
+      "type": "FEEDER",
+      "strategy": "ESG",
+      "investmentDataSource": "TRINITY",
+      "isLive": true,
+      "isLocked": false,
+      "name": {
+        "legal": "Keystone Emerging Fund III"
+      },
+      "externalSystemAssociations": []
+    },
+    {
+      "id": "5686cb86-5a66-4076-96c2-157a8410e11f",
+      "externalId": "KC004",
+      "createdBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "updatedBy": "029c0e70-1240-48d4-b2c0-39ff34cc34a1",
+      "createdAt": "2024-10-01T04:11:03.440Z",
+      "updatedAt": "2026-03-24T16:21:54.336Z",
+      "currencyCode": "USD",
+      "inceptionPeriod": {
+        "year": 2025,
+        "index": 3
+      },
+      "dataStartPeriod": {
+        "year": 2025,
+        "index": 3
+      },
+      "interval": "QUARTERLY",
+      "gp": "8e6c3269-ce8e-4193-9bfd-7cb52b92c1af",
+      "type": "MASTER",
+      "strategy": "INFRASTRUCTURE",
+      "investmentDataSource": "TRINITY",
+      "isLive": true,
+      "isLocked": false,
+      "name": {
+        "legal": "Keystone Emerging Fund II"
+      },
+      "externalSystemAssociations": []
+    },
+    {
+      "id": "742a7d50-b0d2-42da-8740-a06f16ad92d4",
+      "externalId": "KC007",
+      "createdBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "updatedBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "createdAt": "2024-10-01T04:11:03.440Z",
+      "updatedAt": "2024-10-01T04:11:03.440Z",
+      "currencyCode": "USD",
+      "inceptionPeriod": {
+        "year": 2021,
+        "index": 2
+      },
+      "interval": "QUARTERLY",
+      "gp": "8e6c3269-ce8e-4193-9bfd-7cb52b92c1af",
+      "type": "FEEDER",
+      "strategy": "REAL_ESTATE",
+      "investmentDataSource": "TRINITY",
+      "isLive": true,
+      "isLocked": false,
+      "name": {
+        "legal": "Keystone Offshore Fund II",
+        "marketing": "Keystone Offshore Fund II",
+        "short": "Keystone Offshore Fund II"
+      },
+      "externalSystemAssociations": []
+    },
+    {
+      "id": "a1f1f6bd-4908-4257-b7dc-555efac8d4fa",
+      "externalId": "KC006",
+      "createdBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "updatedBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "createdAt": "2024-10-01T04:11:03.440Z",
+      "updatedAt": "2024-10-01T04:11:03.440Z",
+      "currencyCode": "USD",
+      "inceptionPeriod": {
+        "year": 2019,
+        "index": 1
+      },
+      "interval": "QUARTERLY",
+      "gp": "8e6c3269-ce8e-4193-9bfd-7cb52b92c1af",
+      "type": "FEEDER",
+      "strategy": "INFRASTRUCTURE",
+      "investmentDataSource": "TRINITY",
+      "isLive": true,
+      "isLocked": false,
+      "name": {
+        "legal": "Keystone Offshore Fund I",
+        "marketing": "Keystone Offshore Fund I",
+        "short": "Keystone Offshore Fund I"
+      },
+      "externalSystemAssociations": []
+    },
+    {
+      "id": "fea04ba2-b246-43db-a674-e61559bf0753",
+      "externalId": "KC002",
+      "createdBy": "0e1fdae2-bbea-468f-8d6c-49726168d54b",
+      "updatedBy": "029c0e70-1240-48d4-b2c0-39ff34cc34a1",
+      "createdAt": "2024-10-01T04:11:03.440Z",
+      "updatedAt": "2026-03-24T16:01:42.093Z",
+      "currencyCode": "USD",
+      "inceptionPeriod": {
+        "year": 2025,
+        "index": 3
+      },
+      "dataStartPeriod": {
+        "year": 2025,
+        "index": 3
+      },
+      "interval": "QUARTERLY",
+      "gp": "8e6c3269-ce8e-4193-9bfd-7cb52b92c1af",
+      "type": "CLOSED",
+      "strategy": "MULTI_STRATEGY",
+      "investmentDataSource": "TRINITY",
+      "isLive": true,
+      "isLocked": false,
+      "name": {
+        "legal": "Keystone Capital Fund II",
+        "marketing": "Keystone Capital Fund II",
+        "short": "Keystone Capital Fund II"
+      },
+      "externalSystemAssociations": []
+    }
+  ]
