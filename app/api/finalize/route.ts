@@ -21,7 +21,8 @@ export async function POST(req: NextRequest) {
       const safeInvestor = sanitize(row.investorName || 'Unknown');
       const safeFund = sanitize(row.fundName || 'Unknown');
       const safeType = sanitize(row.documentType || 'Document');
-      const filename = `${safeFund}/${safeInvestor}/${safeType}_p${row.pageRange}.pdf`;
+      // Flat structure: just filename at root level
+      const filename = `${safeFund}_${safeInvestor}_${safeType}_p${row.pageRange}.pdf`;
       zip.file(filename, pdf);
     }
     const manifest = buildManifest(body.rows);
@@ -63,7 +64,8 @@ function buildManifest(rows: DocumentRow[]): Buffer {
     const safeInvestor = sanitize(r.investorName || 'Unknown');
     const safeFund = sanitize(r.fundName || 'Unknown');
     const safeType = sanitize(r.documentType || 'Document');
-    const filename = `${safeFund}/${safeInvestor}/${safeType}_p${r.pageRange}.pdf`;
+    // Flat structure: underscore-separated filename at root level
+    const filename = `${safeFund}_${safeInvestor}_${safeType}_p${r.pageRange}.pdf`;
 
     return {
       'FileName*': r.sourcePath ?? filename,
