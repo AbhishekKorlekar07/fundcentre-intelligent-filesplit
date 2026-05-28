@@ -35,12 +35,25 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // no-split: just produce the manifest xlsx
+  // no-split: produce the manifest xlsx in a zip along with original PDFs
   const manifest = buildManifest(body.rows);
-  return new NextResponse(new Uint8Array(manifest), {
+  const zip = new JSZip();
+  zip.file('PRE_SPLIT_SPREADSHEET.xlsx', manifest);
+
+  // Add all uploaded PDF files to the zip at root level (no folders)
+  if ('files' in job && job.files) {
+    for (const file of job.files) {
+      // Extract just the filename from the path (remove any folder structure)
+      const filename = file.path.split('/').pop() || file.path;
+      zip.file(filename, file.buffer);
+    }
+  }
+
+  const out = await zip.generateAsync({ type: 'nodebuffer' });
+  return new NextResponse(new Uint8Array(out), {
     headers: {
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': `attachment; filename="PRE_SPLIT_SPREADSHEET.xlsx"`,
+      'Content-Type': 'application/zip',
+      'Content-Disposition': `attachment; filename="metadata-${body.jobId.slice(0, 8)}.zip"`,
     },
   });
 }

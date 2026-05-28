@@ -51,7 +51,7 @@ export default function ReviewPage() {
       a.href = url;
       a.download = data.mode === 'split-code'
         ? `filesplit-${jobId.slice(0, 8)}.zip`
-        : `PRE_SPLIT_SPREADSHEET.xlsx`;
+        : `metadata-${jobId.slice(0, 8)}.zip`;
       a.click();
       URL.revokeObjectURL(url);
     } finally {
@@ -90,7 +90,7 @@ export default function ReviewPage() {
           disabled={downloading}
           className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white px-5 py-2 rounded-lg font-medium"
         >
-          {downloading ? 'Generating…' : data.mode === 'split-code' ? 'Confirm & download split ZIP' : 'Confirm & download spreadsheet'}
+          {downloading ? 'Generating…' : data.mode === 'split-code' ? 'Confirm & download split ZIP' : 'Confirm & download ZIP'}
         </button>
       </div>
 
