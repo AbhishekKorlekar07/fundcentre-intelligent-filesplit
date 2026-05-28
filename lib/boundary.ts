@@ -27,6 +27,7 @@ export function groupPagesIntoDocuments(pages: PageExtraction[]): DocumentRow[] 
         investorExternalId: null,
         fundExternalId: null,
         accountExternalId: null,
+        classCode: p.classCode,
         documentType: p.documentType,
         confidence: p.confidence,
       };

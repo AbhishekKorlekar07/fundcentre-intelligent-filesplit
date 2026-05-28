@@ -51,7 +51,7 @@ export default function ReviewPage() {
       a.href = url;
       a.download = data.mode === 'split-code'
         ? `filesplit-${jobId.slice(0, 8)}.zip`
-        : `manifest-${jobId.slice(0, 8)}.xlsx`;
+        : `PRE_SPLIT_SPREADSHEET.xlsx`;
       a.click();
       URL.revokeObjectURL(url);
     } finally {
@@ -90,7 +90,7 @@ export default function ReviewPage() {
           disabled={downloading}
           className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white px-5 py-2 rounded-lg font-medium"
         >
-          {downloading ? 'Generating…' : data.mode === 'split-code' ? 'Confirm & download split ZIP' : 'Confirm & download manifest'}
+          {downloading ? 'Generating…' : data.mode === 'split-code' ? 'Confirm & download split ZIP' : 'Confirm & download spreadsheet'}
         </button>
       </div>
 
@@ -108,6 +108,7 @@ export default function ReviewPage() {
                 <th className="px-3 py-2 font-medium">Fund Ext ID</th>
                 <th className="px-3 py-2 font-medium">Account</th>
                 <th className="px-3 py-2 font-medium">Account Ext ID</th>
+                <th className="px-3 py-2 font-medium">Class Code</th>
                 <th className="px-3 py-2 font-medium">Type</th>
                 <th className="px-3 py-2 font-medium">Conf.</th>
               </tr>
@@ -124,6 +125,15 @@ export default function ReviewPage() {
                   <td className="px-3 py-2 text-gray-700 font-mono text-xs">{r.fundExternalId ?? '—'}</td>
                   <td className="px-3 py-2"><Cell value={r.accountName} status={r.validation?.accountName} onChange={(v) => updateRow(r.id, { accountName: v })} /></td>
                   <td className="px-3 py-2 text-gray-700 font-mono text-xs">{r.accountExternalId ?? '—'}</td>
+                  <td className="px-3 py-2">
+                    <input
+                      type="text"
+                      value={r.classCode ?? ''}
+                      onChange={(e) => updateRow(r.id, { classCode: e.target.value || null })}
+                      placeholder="—"
+                      className="w-full border border-transparent hover:border-gray-200 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded px-2 py-1 outline-none bg-transparent"
+                    />
+                  </td>
                   <td className="px-3 py-2">
                     <select
                       value={r.documentType ?? ''}

@@ -125,6 +125,7 @@ async function handleNoSplit(jobId: string, zipBuffer: Buffer): Promise<NextResp
           investorExternalId: null,
           fundExternalId: null,
           accountExternalId: null,
+          classCode: meta.classCode,
           documentType: meta.documentType,
           confidence: meta.confidence,
           sourcePath: f.path,

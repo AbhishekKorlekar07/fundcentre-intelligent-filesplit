@@ -66,6 +66,7 @@ Other rules:
 - If a page is clearly a continuation of the prior page (no new fund header, no new salutation, no new "X hereby advises you" sentence, no new title), set isContinuation=true and leave all metadata fields null.
 - A new document typically starts with a fresh fund header, statement title, or "<NAME> hereby advises you" sentence.
 - documentType must be one of: "K-1", "Capital Statement", "Capital Call Notice", "Distribution Notice", "Quarterly Report", "Annual Report", "Other".
+- classCode: extract any class/share class identifier (e.g. "Class A", "Series B", "Common", "Class 1") if explicitly mentioned. Leave null if not present.
 - Confidence is 0-1. Use lower confidence when fields are inferred or partially visible. Use HIGH confidence (>=0.9) only when a clear "<NAME> hereby advises you" or labelled investor field is present.
 - Be concise. Do not invent values — use null when unsure.`;
 
@@ -79,6 +80,7 @@ const TOOL_SCHEMA = {
       investorId: { type: ['string', 'null'], description: 'Internal account or investor identifier' },
       fundName: { type: ['string', 'null'], description: 'Fund name (e.g. "ADFund2 LP")' },
       accountName: { type: ['string', 'null'], description: 'Account/sub-account label, may equal investor name' },
+      classCode: { type: ['string', 'null'], description: 'Class or share class identifier (e.g. "Class A", "Series B")' },
       documentType: {
         type: ['string', 'null'],
         enum: ['K-1', 'Capital Statement', 'Capital Call Notice', 'Distribution Notice', 'Quarterly Report', 'Annual Report', 'Other', null],
@@ -87,7 +89,7 @@ const TOOL_SCHEMA = {
       confidence: { type: 'number', description: '0..1 confidence in the extracted fields' },
       notes: { type: ['string', 'null'], description: 'Optional short note about ambiguity' },
     },
-    required: ['investorName', 'investorId', 'fundName', 'accountName', 'documentType', 'isContinuation', 'confidence'],
+    required: ['investorName', 'investorId', 'fundName', 'accountName', 'classCode', 'documentType', 'isContinuation', 'confidence'],
   },
 };
 
@@ -165,6 +167,7 @@ function normalize(input: Record<string, unknown>): ExtractedMetadata {
     investorId: (input.investorId as string | null) ?? null,
     fundName: (input.fundName as string | null) ?? null,
     accountName: (input.accountName as string | null) ?? null,
+    classCode: (input.classCode as string | null) ?? null,
     documentType: docType ?? null,
     isContinuation: Boolean(input.isContinuation),
     confidence: typeof input.confidence === 'number' ? input.confidence : 0.5,
@@ -173,11 +176,11 @@ function normalize(input: Record<string, unknown>): ExtractedMetadata {
 }
 
 const MOCK_INVESTORS = [
-  { investorName: 'New York Pension Fund', investorId: '1002', fundName: 'Keystone Capital Fund I', accountName: 'default' },
-  { investorName: 'Habour Trust Group', investorId: '1001', fundName: 'Keystone Capital Fund II', accountName: 'default' },
-  { investorName: 'Howard Endowment', investorId: '1006', fundName: 'Keystone Emerging Fund I', accountName: 'default' },
-  { investorName: 'Liberty Insurance', investorId: '1003', fundName: 'Keystone Offshore Fund II', accountName: 'default' },
-  { investorName: 'Atlas Crest Capital', investorId: '1009', fundName: 'Keystone Emerging Fund III', accountName: 'default' },
+  { investorName: 'New York Pension Fund', investorId: '1002', fundName: 'Keystone Capital Fund I', accountName: 'default', classCode: 'Class A' },
+  { investorName: 'Habour Trust Group', investorId: '1001', fundName: 'Keystone Capital Fund II', accountName: 'default', classCode: 'Class B' },
+  { investorName: 'Howard Endowment', investorId: '1006', fundName: 'Keystone Emerging Fund I', accountName: 'default', classCode: 'Series 1' },
+  { investorName: 'Liberty Insurance', investorId: '1003', fundName: 'Keystone Offshore Fund II', accountName: 'default', classCode: 'Common' },
+  { investorName: 'Atlas Crest Capital', investorId: '1009', fundName: 'Keystone Emerging Fund III', accountName: 'default', classCode: 'Class A' },
 ];
 const MOCK_TYPES: DocumentType[] = ['K-1', 'Capital Statement', 'Capital Call Notice', 'Distribution Notice', 'Quarterly Report'];
 
@@ -196,6 +199,7 @@ function mockExtract(label: string): ExtractedMetadata {
       investorId: null,
       fundName: null,
       accountName: null,
+      classCode: null,
       documentType: null,
       isContinuation: true,
       confidence: 0.92,
