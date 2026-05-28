@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import type { DocumentRow, ExtractResponse, DocumentType, ValidationStatus } from '@/lib/types';
@@ -21,6 +21,16 @@ export default function ReviewPage() {
   const [data, setData] = useState<ExtractResponse | null>(null);
   const [rows, setRows] = useState<DocumentRow[]>([]);
   const [downloading, setDownloading] = useState(false);
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+
+  function toggleExpanded(id: string) {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   useEffect(() => {
     const raw = sessionStorage.getItem(`job:${jobId}`);
@@ -101,6 +111,7 @@ export default function ReviewPage() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-700 text-left">
               <tr>
+                <th className="px-2 py-2 font-medium w-8"></th>
                 <th className="px-3 py-2 font-medium">{data.mode === 'split-code' ? 'Pages' : 'Source path'}</th>
                 <th className="px-3 py-2 font-medium">Investor</th>
                 <th className="px-3 py-2 font-medium">Investor Ext ID</th>
@@ -113,32 +124,54 @@ export default function ReviewPage() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {rows.map((r) => (
-                <tr key={r.id} className={`hover:bg-gray-50 ${r.validation?.relationship === 'mismatch' ? 'bg-red-50/40' : ''}`}>
-                  <td className="px-3 py-2 text-gray-700 font-mono text-xs">
-                    {data.mode === 'split-code' ? r.pageRange : r.sourcePath}
-                  </td>
-                  <td className="px-3 py-2"><Cell value={r.investorName} status={r.validation?.investorName} onChange={(v) => updateRow(r.id, { investorName: v })} /></td>
-                  <td className="px-3 py-2 text-gray-700 font-mono text-xs">{r.investorExternalId ?? '—'}</td>
-                  <td className="px-3 py-2"><Cell value={r.fundName} status={r.validation?.fundName} onChange={(v) => updateRow(r.id, { fundName: v })} /></td>
-                  <td className="px-3 py-2 text-gray-700 font-mono text-xs">{r.fundExternalId ?? '—'}</td>
-                  <td className="px-3 py-2"><Cell value={r.accountName} status={r.validation?.accountName} onChange={(v) => updateRow(r.id, { accountName: v })} /></td>
-                  <td className="px-3 py-2 text-gray-700 font-mono text-xs">{r.accountExternalId ?? '—'}</td>
-                  <td className="px-3 py-2">
-                    <select
-                      value={r.documentType ?? ''}
-                      onChange={(e) => updateRow(r.id, { documentType: (e.target.value || null) as DocumentType | null })}
-                      className="border rounded px-2 py-1 text-sm w-full"
-                    >
-                      <option value="">—</option>
-                      {DOC_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                  </td>
-                  <td className="px-3 py-2">
-                    <ConfidenceBadge value={r.confidence} />
-                  </td>
-                </tr>
-              ))}
+              {rows.map((r) => {
+                const isExpanded = expandedRows.has(r.id);
+                return (
+                  <Fragment key={r.id}>
+                    <tr className={`hover:bg-gray-50 ${r.validation?.relationship === 'mismatch' ? 'bg-red-50/40' : ''}`}>
+                      <td className="px-2 py-2 align-top">
+                        <button
+                          type="button"
+                          onClick={() => toggleExpanded(r.id)}
+                          aria-label={isExpanded ? 'Hide preview' : 'Show preview'}
+                          className="text-gray-500 hover:text-gray-900 w-6 h-6 inline-flex items-center justify-center rounded hover:bg-gray-100"
+                        >
+                          <span className={`inline-block transition-transform ${isExpanded ? 'rotate-90' : ''}`}>▶</span>
+                        </button>
+                      </td>
+                      <td className="px-3 py-2 text-gray-700 font-mono text-xs">
+                        {data.mode === 'split-code' ? r.pageRange : r.sourcePath}
+                      </td>
+                      <td className="px-3 py-2"><Cell value={r.investorName} status={r.validation?.investorName} onChange={(v) => updateRow(r.id, { investorName: v })} /></td>
+                      <td className="px-3 py-2 text-gray-700 font-mono text-xs">{r.investorExternalId ?? '—'}</td>
+                      <td className="px-3 py-2"><Cell value={r.fundName} status={r.validation?.fundName} onChange={(v) => updateRow(r.id, { fundName: v })} /></td>
+                      <td className="px-3 py-2 text-gray-700 font-mono text-xs">{r.fundExternalId ?? '—'}</td>
+                      <td className="px-3 py-2"><Cell value={r.accountName} status={r.validation?.accountName} onChange={(v) => updateRow(r.id, { accountName: v })} /></td>
+                      <td className="px-3 py-2 text-gray-700 font-mono text-xs">{r.accountExternalId ?? '—'}</td>
+                      <td className="px-3 py-2">
+                        <select
+                          value={r.documentType ?? ''}
+                          onChange={(e) => updateRow(r.id, { documentType: (e.target.value || null) as DocumentType | null })}
+                          className="border rounded px-2 py-1 text-sm w-full"
+                        >
+                          <option value="">—</option>
+                          {DOC_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                      </td>
+                      <td className="px-3 py-2">
+                        <ConfidenceBadge value={r.confidence} />
+                      </td>
+                    </tr>
+                    {isExpanded && (
+                      <tr className="bg-gray-50">
+                        <td colSpan={10} className="px-3 py-3">
+                          <PreviewPanel jobId={jobId} mode={data.mode} row={r} />
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -200,6 +233,43 @@ function Cell({
           matched
         </span>
       )}
+    </div>
+  );
+}
+
+function PreviewPanel({
+  jobId, mode, row,
+}: {
+  jobId: string;
+  mode: 'split-code' | 'no-split';
+  row: DocumentRow;
+}) {
+  let label: string;
+  let src: string;
+  if (mode === 'split-code') {
+    const pageCount = row.endPage - row.startPage + 1;
+    label = pageCount === 1 ? `Page ${row.startPage}` : `Pages ${row.startPage}–${row.endPage} (${pageCount} pages)`;
+    src = `/api/preview/${jobId}/range?start=${row.startPage}&end=${row.endPage}`;
+  } else if (row.sourcePath) {
+    label = row.sourcePath;
+    src = `/api/preview/${jobId}/page/1?path=${encodeURIComponent(row.sourcePath)}`;
+  } else {
+    return <div className="text-sm text-gray-500">No preview available for this row.</div>;
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+        Document preview
+      </div>
+      <div className="bg-white border rounded-lg overflow-hidden">
+        <div className="px-3 py-1.5 text-xs text-gray-600 bg-gray-50 border-b font-mono">{label}</div>
+        <object data={src} type="application/pdf" className="w-full h-[600px]">
+          <div className="p-4 text-sm text-gray-600">
+            Your browser can't render PDFs inline. <a href={src} target="_blank" rel="noreferrer" className="text-brand-600 underline">Open in new tab</a>.
+          </div>
+        </object>
+      </div>
     </div>
   );
 }
