@@ -12,6 +12,7 @@ export interface ExtractedMetadata {
   investorId: string | null;
   fundName: string | null;
   accountName: string | null;
+  classCode: string | null;
   documentType: DocumentType | null;
   isContinuation: boolean;
   confidence: number;
@@ -44,6 +45,7 @@ export interface DocumentRow {
   investorExternalId: string | null;
   fundExternalId: string | null;
   accountExternalId: string | null;
+  classCode: string | null;
   documentType: DocumentType | null;
   confidence: number;
   sourcePath?: string;

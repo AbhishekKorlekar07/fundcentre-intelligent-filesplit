@@ -61,7 +61,7 @@ export default function ReviewPage() {
       a.href = url;
       a.download = data.mode === 'split-code'
         ? `filesplit-${jobId.slice(0, 8)}.zip`
-        : `manifest-${jobId.slice(0, 8)}.xlsx`;
+        : `metadata-${jobId.slice(0, 8)}.zip`;
       a.click();
       URL.revokeObjectURL(url);
     } finally {
@@ -100,7 +100,7 @@ export default function ReviewPage() {
           disabled={downloading}
           className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white px-5 py-2 rounded-lg font-medium"
         >
-          {downloading ? 'Generating…' : data.mode === 'split-code' ? 'Confirm & download split ZIP' : 'Confirm & download manifest'}
+          {downloading ? 'Generating…' : data.mode === 'split-code' ? 'Confirm & download split ZIP' : 'Confirm & download ZIP'}
         </button>
       </div>
 
@@ -119,6 +119,7 @@ export default function ReviewPage() {
                 <th className="px-3 py-2 font-medium">Fund Ext ID</th>
                 <th className="px-3 py-2 font-medium">Account</th>
                 <th className="px-3 py-2 font-medium">Account Ext ID</th>
+                <th className="px-3 py-2 font-medium">Class Code</th>
                 <th className="px-3 py-2 font-medium">Type</th>
                 <th className="px-3 py-2 font-medium">Conf.</th>
               </tr>

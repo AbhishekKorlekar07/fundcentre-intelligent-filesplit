@@ -21,11 +21,12 @@ export async function POST(req: NextRequest) {
       const safeInvestor = sanitize(row.investorName || 'Unknown');
       const safeFund = sanitize(row.fundName || 'Unknown');
       const safeType = sanitize(row.documentType || 'Document');
-      const filename = `${safeFund}/${safeInvestor}/${safeType}_p${row.pageRange}.pdf`;
+      // Flat structure: just filename at root level
+      const filename = `${safeFund}_${safeInvestor}_${safeType}_p${row.pageRange}.pdf`;
       zip.file(filename, pdf);
     }
     const manifest = buildManifest(body.rows);
-    zip.file('manifest.xlsx', manifest);
+    zip.file('PRE_SPLIT_SPREADSHEET.xlsx', manifest);
     const out = await zip.generateAsync({ type: 'nodebuffer' });
     return new NextResponse(new Uint8Array(out), {
       headers: {
@@ -35,30 +36,48 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // no-split: just produce the manifest xlsx
+  // no-split: produce the manifest xlsx in a zip along with original PDFs
   const manifest = buildManifest(body.rows);
-  return new NextResponse(new Uint8Array(manifest), {
+  const zip = new JSZip();
+  zip.file('PRE_SPLIT_SPREADSHEET.xlsx', manifest);
+
+  // Add all uploaded PDF files to the zip at root level (no folders)
+  if ('files' in job && job.files) {
+    for (const file of job.files) {
+      // Extract just the filename from the path (remove any folder structure)
+      const filename = file.path.split('/').pop() || file.path;
+      zip.file(filename, file.buffer);
+    }
+  }
+
+  const out = await zip.generateAsync({ type: 'nodebuffer' });
+  return new NextResponse(new Uint8Array(out), {
     headers: {
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': `attachment; filename="manifest-${body.jobId.slice(0, 8)}.xlsx"`,
+      'Content-Type': 'application/zip',
+      'Content-Disposition': `attachment; filename="metadata-${body.jobId.slice(0, 8)}.zip"`,
     },
   });
 }
 
 function buildManifest(rows: DocumentRow[]): Buffer {
-  const data = rows.map((r) => ({
-    'Investor Name': r.investorName ?? '',
-    'Investor ID': r.investorId ?? '',
-    'Fund Name': r.fundName ?? '',
-    'Account Name': r.accountName ?? '',
-    'Document Type': r.documentType ?? '',
-    'Page Range': r.pageRange,
-    'Source Path': r.sourcePath ?? '',
-    Confidence: r.confidence,
-  }));
+  const data = rows.map((r) => {
+    const safeInvestor = sanitize(r.investorName || 'Unknown');
+    const safeFund = sanitize(r.fundName || 'Unknown');
+    const safeType = sanitize(r.documentType || 'Document');
+    // Flat structure: underscore-separated filename at root level
+    const filename = `${safeFund}_${safeInvestor}_${safeType}_p${r.pageRange}.pdf`;
+
+    return {
+      'FileName*': r.sourcePath ?? filename,
+      'Investor Id': r.investorExternalId ?? '',
+      'Account Id': r.accountExternalId ?? '',
+      'Fund Id': r.fundExternalId ?? '',
+      'Class Code': r.classCode ?? '',
+    };
+  });
   const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Manifest');
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
   const buf = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' }) as Buffer;
   return buf;
 }
